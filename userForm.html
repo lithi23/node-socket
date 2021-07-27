@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NodeJS Socket Io notification app</title>
+    <meta charset="utf-8">
+    <link href="/css/toastr.min.css" rel="stylesheet"/>
+  </head>
+  <body>
+ 
+<h1>User Form</h1>
+  <form>
+    Name: <input type="text" id="name" placeholder="Name" required/> 
+    Email: <input type="email" id="email" placeholder="Email" required/> 
+    Mobile: <input type="text" id="mobile" placeholder="Mobile" required/> 
+    <button type="button" onclick="sendMessage()">Submit</button>
+  </form>
+
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/toastr.min.js"></script>
+  <script src="/js/socket.io.js"></script>
+  <script>
+    const socket = io();
+    toastr.options = {
+        timeOut: 2000,
+        positionClass : 'toast-bottom-right',
+        extendedTimeOut: 0,
+        fadeOut: 0,
+        fadeIn: 0,
+        showDuration: 0,
+        hideDuration: 0,
+        debug: false
+    };
+    
+    socket.on('new-notification', (resp) => {
+      toastr.success(resp, 'User submitted form')
+    });
+    
+    function sendMessage() {
+      let name = document.getElementById('name').value;
+      if(name.trim() !== '') {
+        socket.emit("send-notification", name);
+      }
+      
+    }
+  </script>
+</body>
+</html>
